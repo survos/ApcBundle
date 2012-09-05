@@ -55,9 +55,13 @@ class ApcClearCommand extends ContainerAwareCommand
         }
 
         $url = $this->getContainer()->getParameter('ornicar_apc.host').'/'.$filename;
+        $proxy = $this->getContainer()->getParameter('ornicar_apc.proxy');
 
         if ($this->getContainer()->getParameter('ornicar_apc.mode') == 'fopen') {
-            $result = file_get_contents($url);
+            $context = stream_context_create(array(
+                'http' => array('proxy' => $proxy)
+            ));
+            $result = file_get_contents($url, false, $context);
 
             if (!$result) {
                 unlink($file);
@@ -69,7 +73,8 @@ class ApcClearCommand extends ContainerAwareCommand
             curl_setopt_array($ch, array(
                 CURLOPT_HEADER => false,
                 CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_FAILONERROR => true
+                CURLOPT_FAILONERROR => true,
+                CURLOPT_PROXY => $proxy
             ));
 
             $result = curl_exec($ch);

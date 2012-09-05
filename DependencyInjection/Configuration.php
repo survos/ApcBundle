@@ -24,6 +24,7 @@ class Configuration
             ->isRequired()
             ->children()
                 ->scalarNode('host')->isRequired()->end()
+                ->scalarNode('proxy')->defaultValue('')->end()
                 ->scalarNode('web_dir')->isRequired()->end()
                 ->scalarNode('mode')->defaultValue('fopen')->end()
             ->end()

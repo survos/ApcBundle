@@ -18,6 +18,7 @@ class OrnicarApcExtension extends Extension
             $config['host'] = 'http://'.$config['host'];
         }
         $container->setParameter('ornicar_apc.host', trim($config['host'], '/'));
+        $container->setParameter('ornicar_apc.proxy', $config['proxy']);
         $container->setParameter('ornicar_apc.web_dir', $config['web_dir']);
         $container->setParameter('ornicar_apc.mode', $config['mode']);
     }
