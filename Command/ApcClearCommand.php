@@ -61,9 +61,14 @@ class ApcClearCommand extends ContainerAwareCommand
             $context = stream_context_create(array(
                 'http' => array('proxy' => $proxy)
             ));
-            $result = file_get_contents($url, false, $context);
+            try {
+                $result = file_get_contents($url, false, $context);
 
-            if (!$result) {
+                if (!$result) {
+                    unlink($file);
+                    throw new \RuntimeException(sprintf('Unable to read "%s", does the host locally resolve?', $url));
+                }
+            } catch (\ErrorException $e) {
                 unlink($file);
                 throw new \RuntimeException(sprintf('Unable to read "%s", does the host locally resolve?', $url));
             }
